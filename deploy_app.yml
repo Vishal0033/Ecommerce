@@ -1,0 +1,42 @@
+---
+- name: Deploy E-Commerce App
+  hosts: web
+  become: yes
+  tasks:
+    - name: Update apt packages
+      apt:
+        update_cache: yes
+
+    - name: Install dependencies
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - docker.io
+        state: present
+
+    - name: Copy app.py to EC2
+      copy:
+        src: /home/vishal33/files/app.py     # local path to app.py on your control machine
+        dest: /home/ubuntu/app/app.py        # EC2 path
+
+
+    - name: Install Flask and Prometheus client
+      become: yes
+      apt:
+        name:
+          - python3-flask
+          - python3-prometheus-client
+        state: present
+
+
+    - name: Run Flask app
+      shell: nohup python3 /home/ubuntu/app.py &
+
+    - name: Run Prometheus Node Exporter in Docker
+      docker_container:
+        name: node_exporter
+        image: prom/node-exporter
+        state: started
+        ports:
+          - "9101:9100"
