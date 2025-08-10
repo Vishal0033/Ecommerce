@@ -96,7 +96,7 @@ Build & run locally:
 docker build -t flask-app .
 docker run -p 5000:5000 flask-app
 ```
-
+![alt text](<screenshots/Screenshot 2025-08-09 110553.png>)
 ---
 
 ### ** Launch AWS EC2**
@@ -107,10 +107,11 @@ docker run -p 5000:5000 flask-app
   - `9090` (Prometheus)
   - `3000` (Grafana)
 
+![alt text](<screenshots/Screenshot 2025-08-09 132654.png>)
 
+![alt text](<screenshots/Screenshot 2025-08-09 132643.png>)
 
-
-
+![alt text](<screenshots/Screenshot 2025-08-09 220139.png>)
 ---
 
 ### ** Jenkins **
@@ -121,6 +122,7 @@ docker run -d --name jenkins -p 8081:8080 -p 50000:50000 -v jenkins_home:/var/je
 # Access Jenkins UI
 http://<ec2-public-ip>:8081
 ```
+![alt text](screenshots/jenkins.jpg)
 ---
 
 ### ** Configure Ansible Inventory**
@@ -144,7 +146,7 @@ Run:
 ```bash
 ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
 ```
-
+![alt text](<screenshots/Screenshot 2025-08-10 190123.png>)
 
 ---
 
