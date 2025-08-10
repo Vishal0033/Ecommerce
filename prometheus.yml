@@ -8,8 +8,8 @@ scrape_configs:
 
   - job_name: "flask_app"
     static_configs:
-      - targets: ["13.203.216.233:5000"]
+      - targets: ["13.201.227.156:5000"]
 
   - job_name: "node_exporter"
     static_configs:
-      - targets: ["13.203.216.233:9100"]
+      - targets: ["13.201.227.156:9100"]
