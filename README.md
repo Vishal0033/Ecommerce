@@ -53,14 +53,15 @@ The pipeline covers:
 .
 ├── ansible/
 │   ├── inventory.ini          # Target EC2 instance(s)
-│   ├── playbook.yml           # Main automation playbook
-│   ├── roles/                 # Role-based Ansible tasks
-│   └── templates/             # Config templates
+│   └── deploy_app.yml         # Main automation playbook
 ├── app/
 │   ├── app.py                 # Flask application
 │   ├── requirements.txt       # Python dependencies
-│   └── Dockerfile             # Container build definition
+│   ├── Dockerfile             # Container build definition
 │   └── prometheus.yml         # Prometheus configuration
+├── terraform/
+│   ├── main.tf                # Target to create EC2 instance
+│   └── terraform.tfstate
 ├── jenkins/
 └── README.md                  # Documentation
 ```
