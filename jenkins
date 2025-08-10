@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    environment {
+        EC2_USER = "ubuntu"                       // EC2 username
+        EC2_HOST = "13.201.227.156"            // EC2 Public IP
+        SSH_KEY_PATH = "e-shop.pem"                // Path to your private key on Jenkins machine
+        APP_DIR = "~/app"                          // App directory on EC2
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Vishal0033/Ecommerce-app.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t ecommerce-app .'
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag ecommerce-app:latest $DOCKER_USER/ecommerce-app:latest
+                        docker push $DOCKER_USER/ecommerce-app:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to EC2') {
+            steps {
+                sh """
+                    ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_PATH} ${EC2_USER}@${EC2_HOST} '
+                        docker pull $DOCKER_USER/ecommerce-app:latest &&
+                        docker stop ecommerce-app || true &&
+                        docker rm ecommerce-app || true &&
+                        docker run -d --name ecommerce-app -p 8080:8080 $DOCKER_USER/ecommerce-app:latest
+                    '
+                """
+            }
+        }
+    }
+}
